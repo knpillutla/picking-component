@@ -7,18 +7,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.example.picking.streams.PickingStreams;
+
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootApplication
-@EnableBinding(Source.class)
 @EnableAutoConfiguration
 @EnableScheduling
+@Slf4j
 public class PickingApplication {
 	private Random random = new Random();
-	
-	@Value( "${avro.schema.file.path:avro/}")
-	private String avroSchemaFilePath;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PickingApplication.class, args);

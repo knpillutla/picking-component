@@ -1,16 +1,27 @@
 package com.example.picking.service;
 
-import com.example.picking.dto.events.PickConfirmationEvent;
-import com.example.picking.dto.events.PickCreationEvent;
-import com.example.picking.dto.requests.PickCreationRequest;
-import com.example.picking.dto.requests.PickRequest;
+import java.util.List;
+
+import com.example.picking.dto.requests.PickConfirmRequestDTO;
+import com.example.picking.dto.requests.PickCreationRequestDTO;
+import com.example.picking.dto.requests.PicklistCreationRequestDTO;
+import com.example.picking.dto.responses.PickDTO;
+import com.example.picking.dto.responses.PicklistDTO;
 
 public interface PickingService {
-	public PickRequest getNextPick() throws Exception;
+	public PickDTO getNextPick() throws Exception;
 
-	public PickConfirmationEvent confirmPick(PickRequest pickRequest) throws Exception;
-
-	public PickCreationEvent createPick(PickCreationRequest pickCreationRequest) throws Exception;
+	public PickDTO createPick(PickCreationRequestDTO pickCreationRequest) throws Exception;
 	
-	public PickRequest findById(Integer locnNbr, Long pickId) throws Exception;
+	public PickDTO confirmPick(PickConfirmRequestDTO pickConfirmRequest) throws Exception;
+
+	public List<PickDTO> findByOrderId(String busName, Integer locnNbr, Long orderId) throws Exception;
+
+	public List<PickDTO> findByOrderNbr(String busName, Integer locnNbr, String orderNbr) throws Exception;
+
+	PickDTO getNextPick(Long picklistId) throws Exception;
+
+	public PicklistDTO createPicklist(PicklistCreationRequestDTO picklistCreationReq);
+
+	PickDTO findByPickId(String busName, Integer locnNbr, Long pickDtlId) throws Exception;
 }

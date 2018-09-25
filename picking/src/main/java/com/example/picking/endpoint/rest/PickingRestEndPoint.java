@@ -8,20 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.picking.dto.events.PickConfirmationFailureEvent;
-import com.example.picking.dto.events.PickCreationFailureEvent;
-import com.example.picking.dto.requests.PickCreationRequest;
-import com.example.picking.dto.requests.PickRequest;
+import com.example.picking.dto.requests.PickConfirmRequestDTO;
+import com.example.picking.dto.requests.PicklistCreationRequestDTO;
 import com.example.picking.service.PickingService;
 
 import io.swagger.annotations.Api;
@@ -43,7 +39,7 @@ public class PickingRestEndPoint {
 		return ResponseEntity.ok(msg);
 	}
 	
-	@GetMapping("/{locnNbr}/picks/next")
+	@GetMapping("/{busName}/{locnNbr}/picks/next")
 	public ResponseEntity getNextPick() throws IOException {
 		try {
 			return ResponseEntity.ok(pickingService.getNextPick());
@@ -54,10 +50,10 @@ public class PickingRestEndPoint {
 		}
 	}
 	
-	@GetMapping("/{locnNbr}/picks/{id}")
-	public ResponseEntity getByPickId(@PathVariable("locnNbr") Integer locnNbr, @PathVariable("id") Long pickId) throws IOException {
+	@GetMapping("/{busName}/{locnNbr}/picks/{id}")
+	public ResponseEntity getByPickId(@PathVariable("busName") String busName, @PathVariable("locnNbr") Integer locnNbr, @PathVariable("id") Long pickId) throws IOException {
 		try {
-			return ResponseEntity.ok(pickingService.findById(locnNbr, pickId));
+			return ResponseEntity.ok(pickingService.findByPickId(busName, locnNbr, pickId));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,20 +61,43 @@ public class PickingRestEndPoint {
 		}
 	}
 
-	@PostMapping("/{locnNbr}/picks/{id}")
-	public ResponseEntity confirmPick(@PathVariable("locnNbr") Integer locnNbr, @PathVariable("id") Long id, @RequestBody PickRequest pickReq) throws IOException {
+	@GetMapping("/{busName}/{locnNbr}/picks/order/{id}")
+	public ResponseEntity getPicksByOrderId(@PathVariable("busName") String busName, @PathVariable("locnNbr") Integer locnNbr, @PathVariable("id") Long orderId) throws IOException {
+		try {
+			return ResponseEntity.ok(pickingService.findByOrderId(busName, locnNbr, orderId));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error occured while getting next pick task"));
+		}
+	}
+
+	@PostMapping("/{busName}/{locnNbr}/picks/{id}")
+	public ResponseEntity confirmPick(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @PathVariable("id") Long id, @RequestBody PickConfirmRequestDTO pickReq) throws IOException {
 		try {
 			return ResponseEntity.ok(pickingService.confirmPick(pickReq));
 		} catch (Exception e) {
 			
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new PickConfirmationFailureEvent(pickReq, "Error Occured while processing request:" + e.getMessage()));
+			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error Occured for GET request busName:" + busName + ", id:" + id + " : " + e.getMessage()));
 		}
 	}	
 	
-	@PutMapping("/{locnNbr}/picks")
-	public ResponseEntity processPickCreationRequest(@PathVariable("locnNbr") Integer locnNbr, @RequestBody PickCreationRequest pickCreationReq) throws IOException {
+	@PostMapping("/{busName}/{locnNbr}/picklist")
+	public ResponseEntity createPickList(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @RequestBody PicklistCreationRequestDTO picklistCreationReq) throws IOException {
+		try {
+			return ResponseEntity.ok(pickingService.createPicklist(picklistCreationReq));
+		} catch (Exception e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error Occured while processing create pick list, busName:" + busName + ", locnNbr:" + locnNbr + " : " + e.getMessage()));
+		}
+	}	
+	
+	/*	@PutMapping("/{busName}/{locnNbr}/picks")
+	public ResponseEntity processPickCreationRequest(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @RequestBody PickCreationRequestDTO pickCreationReq) throws IOException {
 		long startTime = System.currentTimeMillis();
 		logger.info("Received request for : " + pickCreationReq.toString() + ": at :" + new java.util.Date());
 		ResponseEntity resEntity = null;
@@ -87,10 +106,10 @@ public class PickingRestEndPoint {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			resEntity = ResponseEntity.badRequest().body(new PickCreationFailureEvent(pickCreationReq, "Error Occured while processing request:" + e.getMessage()));
+			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error Occured for GET request busName:" + busName + " : " + e.getMessage()));
 		}
 		long endTime = System.currentTimeMillis();
 		logger.info("Completed request for : " + pickCreationReq.toString() + ": at :" + new java.util.Date() + " : total time:" + (endTime-startTime)/1000.00 + " secs");
 		return resEntity;
-	}	
+	}	*/
 }

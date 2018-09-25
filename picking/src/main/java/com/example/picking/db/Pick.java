@@ -3,12 +3,21 @@ package com.example.picking.db;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.Data;
 
@@ -21,23 +30,36 @@ public class Pick  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="PICKLIST_ID", nullable=true)
+    private Picklist picklist;
+
+	@Column(name="BUS_NAME")
+	String busName;
+
 	@Column(name="LOCN_NBR")
 	Integer locnNbr;
 
 	@Column(name="BUS_UNIT")
 	String busUnit;
 
+	@Column(name="COMPANY")
+	String company;
+	
+	@Column(name="DIVISION")
+	String division;
+	
 	@Column(name="LOCN_BRCD")
 	String locnBrcd;
 
 	@Column(name="ITEM_BRCD")
 	String itemBrcd;
 
-	@Column(name="TOTAL_PICK_QTY")
-	Integer totalPickQty;
+	@Column(name="QTY")
+	Integer qty;
 
-	@Column(name="TOTAL_PICKED_QTY")
-	Integer totalPickedQty;
+	@Column(name="PICKED_QTY")
+	Integer pickedQty;
 
 	@Column(name="FROM_CONTAINER_NBR")
 	String fromContainer;
@@ -45,31 +67,41 @@ public class Pick  implements Serializable{
 	@Column(name="TO_CONTAINER_NBR")
 	String toContainer;
 
-	@Column(name="PICK_TYPE")
-	String pickType;
-
 	@Column(name="STAT_CODE")
 	Integer statCode;
 
-	@Column(name="WAVE_NBR")
-	String waveNbr;
+	@Column(name="ORDER_ID")
+	Integer orderId;
 
 	@Column(name="ORDER_NBR")
 	String orderNbr;
 
 	@Column(name="PACKAGE_NBR")
 	String packageNbr;
+
+	@Column(name="ORDER_LINE_NBR")
+	Integer orderLineNbr;
+
+	@Column(name="TRANSACTION_NAME")
+	String transName;
 	
-	@Column(name="SOURCE_SERVICE")
-	String sourceService;
+	@Column(name="SINGLES")
+	String singles;
+
+	@Column(name="SOURCE")
+	String source;
 
 	@Column(name="HOST_NAME")
 	String hostName;
 
-	@Column(name="CREATED_DTTM")
+	@Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+	@Column(name="CREATED_DTTM", nullable = false, updatable = false)
 	Date createdDttm;
 	
-	@Column(name="UPDATED_DTTM")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "UPDATED_DTTM", nullable = false)
+    @LastModifiedDate
 	Date updatedDttm;
 	
 	@Column(name="USER_ID")
