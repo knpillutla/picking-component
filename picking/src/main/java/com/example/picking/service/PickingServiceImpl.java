@@ -18,9 +18,7 @@ import com.example.picking.dto.events.PickConfirmationEvent;
 import com.example.picking.dto.events.PickCreatedEvent;
 import com.example.picking.dto.requests.PickConfirmRequestDTO;
 import com.example.picking.dto.requests.PickCreationRequestDTO;
-import com.example.picking.dto.requests.PicklistCreationRequestDTO;
 import com.example.picking.dto.responses.PickDTO;
-import com.example.picking.dto.responses.PicklistDTO;
 
 @Service
 public class PickingServiceImpl implements PickingService {
@@ -70,6 +68,7 @@ public class PickingServiceImpl implements PickingService {
 	 * @see com.example.demo.PickingService#confirmPick(com.example.AvroPickTask)
 	 */
 	@Override
+	@Transactional
 	public PickDTO confirmPick(PickConfirmRequestDTO pickConfirmRequest) throws Exception{
 		logger.info("confirmPick Start, :" + pickConfirmRequest);
 		PickDTO pickDTO = null;
@@ -115,6 +114,40 @@ public class PickingServiceImpl implements PickingService {
 	}
 
 	@Override
+	@Transactional
+	public List<PickDTO> releasePicksforOrder(String busName, Integer locnNbr, String orderNbr) throws Exception {
+		List<Pick> pickEntityList = pickDAO.findByBusNameAndLocnNbrAndOrderNbr(busName, locnNbr, orderNbr);
+		List<PickDTO> pickDTOList = new ArrayList();
+		if(pickEntityList!=null) {
+			for(Pick pickEntity : pickEntityList) {
+				pickEntity.setStatCode(PickStatus.RELEASED.getStatCode());
+				pickDTOList.add(EntityDTOConverter.getPickDTO(pickDAO.save(pickEntity)));
+			}
+		}
+		return pickDTOList;
+	}
+
+	@Override
+	@Transactional
+	public List<PickDTO> releasePicksforBatch(String busName, Integer locnNbr, String batchNbr) throws Exception {
+		List<Pick> pickEntityList = pickDAO.findByBusNameAndLocnNbrAndBatchNbr(busName, locnNbr, batchNbr);
+		List<PickDTO> pickDTOList = new ArrayList();
+		if(pickEntityList!=null) {
+			for(Pick pickEntity : pickEntityList) {
+				pickEntity.setStatCode(PickStatus.RELEASED.getStatCode());
+				pickDTOList.add(EntityDTOConverter.getPickDTO(pickDAO.save(pickEntity)));
+			}
+		}
+		return pickDTOList;
+	}
+
+	@Override
+	public PickDTO findByPickId(String busName, Integer locnNbr, Long pickId) throws Exception {
+		Pick pickEntity = pickDAO.findByPickId(busName, locnNbr, pickId);
+		return EntityDTOConverter.getPickDTO(pickEntity);
+	}
+
+	@Override
 	public List<PickDTO> findByOrderNbr(String busName, Integer locnNbr, String orderNbr) throws Exception {
 		List<Pick> pickEntityList = pickDAO.findByBusNameAndLocnNbrAndOrderNbr(busName, locnNbr, orderNbr);
 		List<PickDTO> pickDTOList = new ArrayList();
@@ -125,41 +158,4 @@ public class PickingServiceImpl implements PickingService {
 		}
 		return pickDTOList;
 	}
-
-	@Override
-	public PicklistDTO createPicklist(PicklistCreationRequestDTO picklistCreationReq) {
-		PicklistDTO picklistDTO = null;
-		if(picklistCreationReq.getOrderIdList() !=null && picklistCreationReq.getOrderIdList().size()>0) {
-			// created pick list based on order ids
-			// get all the orderids
-			for(Long orderId:picklistCreationReq.getOrderIdList()) {
-				List<Pick> pickEntityList = pickDAO.findByBusNameAndLocnNbrAndOrderId(picklistCreationReq.getBusName(), picklistCreationReq.getLocnNbr(), orderId);
-				
-			}
-		}
-		else
-		if(picklistCreationReq.getOrderNbrList() !=null && picklistCreationReq.getOrderNbrList().size()>0) {
-			// created pick list based on order ids
-		}
-		else {
-			// create pick list based on number of orders
-			int numOfOrders = picklistCreationReq.getNumOfOrders();
-			String orderSelectionOption = picklistCreationReq.getOrderSelectionOption();
-			if(orderSelectionOption.equalsIgnoreCase("byAreaZoneAisle")) {
-				
-			}
-			else
-			if(orderSelectionOption.equalsIgnoreCase("deliveryType")) {
-				
-			}
-		}
-		return picklistDTO;
-	}
-
-	@Override
-	public PickDTO findByPickId(String busName, Integer locnNbr, Long pickId) throws Exception {
-		Pick pickEntity = pickDAO.findByPickId(busName, locnNbr, pickId);
-		return EntityDTOConverter.getPickDTO(pickEntity);
-	}
-
 }

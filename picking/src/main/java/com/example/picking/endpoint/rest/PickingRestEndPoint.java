@@ -84,10 +84,10 @@ public class PickingRestEndPoint {
 		}
 	}	
 	
-	@PostMapping("/{busName}/{locnNbr}/picklist")
-	public ResponseEntity createPickList(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @RequestBody PicklistCreationRequestDTO picklistCreationReq) throws IOException {
+	@PostMapping("/{busName}/{locnNbr}/orders/release/{orderNbr}")
+	public ResponseEntity releasePicksForOrder(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @PathVariable("orderNbr") String orderNbr) throws IOException {
 		try {
-			return ResponseEntity.ok(pickingService.createPicklist(picklistCreationReq));
+			return ResponseEntity.ok(pickingService.releasePicksforOrder(busName, locnNbr, orderNbr));
 		} catch (Exception e) {
 			
 			// TODO Auto-generated catch block
@@ -96,20 +96,15 @@ public class PickingRestEndPoint {
 		}
 	}	
 	
-	/*	@PutMapping("/{busName}/{locnNbr}/picks")
-	public ResponseEntity processPickCreationRequest(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @RequestBody PickCreationRequestDTO pickCreationReq) throws IOException {
-		long startTime = System.currentTimeMillis();
-		logger.info("Received request for : " + pickCreationReq.toString() + ": at :" + new java.util.Date());
-		ResponseEntity resEntity = null;
+	@PostMapping("/{busName}/{locnNbr}/orders/release/batch/{batchNbr}")
+	public ResponseEntity releasePicksForBatch(@PathVariable("busName") String busName,@PathVariable("locnNbr") Integer locnNbr, @PathVariable("batchNbr") String batchNbr) throws IOException {
 		try {
-			resEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(pickingService.createPick(pickCreationReq));
+			return ResponseEntity.ok(pickingService.releasePicksforBatch(busName, locnNbr, batchNbr));
 		} catch (Exception e) {
+			
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error Occured for GET request busName:" + busName + " : " + e.getMessage()));
+			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error Occured while processing create pick list, busName:" + busName + ", locnNbr:" + locnNbr + " : " + e.getMessage()));
 		}
-		long endTime = System.currentTimeMillis();
-		logger.info("Completed request for : " + pickCreationReq.toString() + ": at :" + new java.util.Date() + " : total time:" + (endTime-startTime)/1000.00 + " secs");
-		return resEntity;
-	}	*/
+	}	
 }

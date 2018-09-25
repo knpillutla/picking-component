@@ -55,6 +55,9 @@ public class Pick  implements Serializable{
 	@Column(name="ITEM_BRCD")
 	String itemBrcd;
 
+	@Column(name="BATCH_NBR")
+	String batchNbr;
+
 	@Column(name="QTY")
 	Integer qty;
 

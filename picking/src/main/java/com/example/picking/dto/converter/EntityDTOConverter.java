@@ -39,6 +39,7 @@ public class EntityDTOConverter {
 		 newPickEntity.setOrderNbr(pickCreationReqDTO.getOrderNbr());
 		newPickEntity.setOrderLineNbr(pickCreationReqDTO.getOrderLineNbr());
 		 newPickEntity.setBusUnit(pickCreationReqDTO.getBusUnit());
+		 newPickEntity.setBatchNbr(pickCreationReqDTO.getBatchNbr());
 		Date newDate = new Date();
 		newPickEntity.setCreatedDttm(newDate);
 		newPickEntity.setUpdatedDttm(newDate);

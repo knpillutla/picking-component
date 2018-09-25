@@ -21,7 +21,9 @@ public interface PickingService {
 
 	PickDTO getNextPick(Long picklistId) throws Exception;
 
-	public PicklistDTO createPicklist(PicklistCreationRequestDTO picklistCreationReq);
-
 	PickDTO findByPickId(String busName, Integer locnNbr, Long pickDtlId) throws Exception;
+
+	List<PickDTO> releasePicksforOrder(String busName, Integer locnNbr, String orderNbr) throws Exception;
+
+	List<PickDTO> releasePicksforBatch(String busName, Integer locnNbr, String batchNbr) throws Exception;
 }
