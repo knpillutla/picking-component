@@ -37,6 +37,12 @@ public class LowPickEvent extends BaseEvent{
 		this.area = area;
 		this.zone = zone;
 		this.userId = userId;
+		this.addHeader("eventName", getEventName());
+		this.addHeader("busName", this.getBusName());
+		this.addHeader("locnNbr", this.getLocnNbr());
+		this.addHeader("company", this.getCompany());
+		this.addHeader("division", this.getDivision());
+		this.addHeader("busUnit", this.getBusUnit());
 	}
 	public LowPickEvent(Map headerMap) {
 		super(EVENT_NAME);
