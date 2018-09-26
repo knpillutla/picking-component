@@ -30,9 +30,8 @@ public class Pick  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="PICKLIST_ID", nullable=true)
-    private Picklist picklist;
+	@Column(name="BATCH_NBR")
+	String batchNbr;
 
 	@Column(name="BUS_NAME")
 	String busName;
@@ -54,9 +53,6 @@ public class Pick  implements Serializable{
 
 	@Column(name="ITEM_BRCD")
 	String itemBrcd;
-
-	@Column(name="BATCH_NBR")
-	String batchNbr;
 
 	@Column(name="QTY")
 	Integer qty;

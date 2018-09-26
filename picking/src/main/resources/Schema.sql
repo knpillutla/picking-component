@@ -1,7 +1,7 @@
 CREATE TABLE picks
 (
     ID serial  primary key,
-    PICKLIST_ID integer NULL,
+    BATCH_NBR character varying(50),
     BUS_NAME character varying(50),
 	LOCN_NBR integer not null default 0,
 	BUS_UNIT  character varying(3) NOT NULL,
@@ -19,25 +19,6 @@ CREATE TABLE picks
 	ORDER_LINE_NBR  INTEGER NOT NULL,
 	SINGLES character varying(1) NULL,
 	PACKAGE_NBR  character varying(25) NOT NULL,
-	TRANSACTION_NAME character varying(50),
-	SOURCE character varying(50),
-	HOST_NAME  character varying(50),
-    CREATED_DTTM  timestamp default NOW(),
-    UPDATED_DTTM  timestamp default NOW(),
-    USER_ID character varying(25)
-);
-CREATE TABLE pick_list
-(
-    ID serial  primary key,
-    BUS_NAME character varying(50),
-	LOCN_NBR integer not null default 0,
-	BUS_UNIT  character varying(3) NOT NULL,
-	COMPANY  character varying(10),
-	DIVISION  character varying(10),
-    QTY integer NOT NULL DEFAULT 0,
-    PICKED_QTY integer DEFAULT 0,
-    NUM_OF_ORDERS integer not null  default 0,
-    STAT_CODE integer DEFAULT 0,
 	TRANSACTION_NAME character varying(50),
 	SOURCE character varying(50),
 	HOST_NAME  character varying(50),

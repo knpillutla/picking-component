@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PickDTO  extends BaseDTO{
 	Long id;
-	Long picklistId;
+	String batchNbr;
 	String busName;
 	Integer locnNbr;
 	String busUnit;

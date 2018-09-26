@@ -14,11 +14,7 @@ public class EntityDTOConverter {
 	public static PickDTO getPickDTO(Pick pickEntity) {
 		if(pickEntity == null)
 			return null;
-		Long pickListId = -1L;
-		if(pickEntity.getPicklist()!=null) {
-			pickListId = pickEntity.getPicklist().getId();
-		}
-		PickDTO pickDTO = new PickDTO(pickEntity.getId(), pickListId, pickEntity.getBusName(),
+		PickDTO pickDTO = new PickDTO(pickEntity.getId(), pickEntity.getBatchNbr(), pickEntity.getBusName(),
 				pickEntity.getLocnNbr(), pickEntity.getBusUnit(), pickEntity.getCompany(), pickEntity.getDivision(),
 				pickEntity.getLocnBrcd(), pickEntity.getItemBrcd(), pickEntity.getQty(), pickEntity.getPickedQty(),
 				pickEntity.getFromContainer(), pickEntity.getToContainer(), pickEntity.getStatCode(),

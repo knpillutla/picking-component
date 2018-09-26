@@ -32,6 +32,6 @@ public class PickConfirmationEvent extends BaseEvent{
 		this.addHeader("company", pickDTO.getCompany());
 		this.addHeader("division", pickDTO.getDivision());
 		this.addHeader("busUnit", pickDTO.getBusUnit());
-		this.addHeader("picklistNbr", pickDTO.getPicklistId());
+		this.addHeader("batchNbr", pickDTO.getBatchNbr());
 	}
 }
