@@ -30,6 +30,9 @@ public class Pick  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
+	@Column(name="ORDER_LINE_ID")
+	Long orderLineId;
+
 	@Column(name="BATCH_NBR")
 	String batchNbr;
 

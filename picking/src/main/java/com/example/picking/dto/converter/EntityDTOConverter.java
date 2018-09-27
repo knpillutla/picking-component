@@ -14,7 +14,7 @@ public class EntityDTOConverter {
 	public static PickDTO getPickDTO(Pick pickEntity) {
 		if(pickEntity == null)
 			return null;
-		PickDTO pickDTO = new PickDTO(pickEntity.getId(), pickEntity.getBatchNbr(), pickEntity.getBusName(),
+		PickDTO pickDTO = new PickDTO(pickEntity.getId(), pickEntity.getOrderLineId(), pickEntity.getBatchNbr(), pickEntity.getBusName(),
 				pickEntity.getLocnNbr(), pickEntity.getBusUnit(), pickEntity.getCompany(), pickEntity.getDivision(),
 				pickEntity.getLocnBrcd(), pickEntity.getItemBrcd(), pickEntity.getQty(), pickEntity.getPickedQty(),
 				pickEntity.getFromContainer(), pickEntity.getToContainer(), pickEntity.getStatCode(),
@@ -44,6 +44,7 @@ public class EntityDTOConverter {
 		newPickEntity.setFromContainer(pickCreationReqDTO.getFromContainer());
 		newPickEntity.setToContainer(pickCreationReqDTO.getToContainer());
 		newPickEntity.setPickedQty(0);
+		newPickEntity.setOrderLineId(pickCreationReqDTO.getOrderLineId());
 		return newPickEntity;
 	}
 }

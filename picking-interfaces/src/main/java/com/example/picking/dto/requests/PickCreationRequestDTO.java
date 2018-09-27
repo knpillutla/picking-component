@@ -35,4 +35,5 @@ public class PickCreationRequestDTO  extends BaseDTO{
 	String hostName;
 	String userId;
 	String batchNbr;
+	Long orderLineId;
 }

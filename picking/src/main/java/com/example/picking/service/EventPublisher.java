@@ -23,7 +23,7 @@ public class EventPublisher {
 
 	public void publish(BaseEvent event) {
 		log.info("Sending event {}", event);
-		MessageChannel messageChannel = pickingStreams.outboundOrders();
+		MessageChannel messageChannel = pickingStreams.outboundPick();
 		MessageHeaderAccessor msgHdrAccessor = new MessageHeaderAccessor();
 		msgHdrAccessor.copyHeadersIfAbsent(event.getHeaderMap());
 		messageChannel.send(MessageBuilder.withPayload(event)

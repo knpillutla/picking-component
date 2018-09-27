@@ -76,6 +76,7 @@ public class PickingServiceImpl implements PickingService {
 			pickEntity.setPickedQty(pickEntity.getPickedQty() + pickConfirmRequest.getQtyPicked());
 			pickEntity.setUserId(pickConfirmRequest.getUserId());
 			pickEntity.setStatCode(PickStatus.PICKED.getStatCode());
+			pickEntity.setToContainer(pickConfirmRequest.getToContainer());
 			Pick updatedPickObj = pickDAO.save(pickEntity);
 			pickDTO = EntityDTOConverter.getPickDTO(updatedPickObj);
 			PickConfirmationEvent pickConfirmEvent = new PickConfirmationEvent(pickDTO);

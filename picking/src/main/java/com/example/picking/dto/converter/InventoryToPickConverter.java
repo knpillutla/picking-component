@@ -3,26 +3,29 @@ package com.example.picking.dto.converter;
 import org.springframework.stereotype.Component;
 
 import com.example.inventory.dto.events.InventoryAllocatedEvent;
+import com.example.inventory.dto.responses.InventoryDTO;
 import com.example.picking.dto.requests.PickCreationRequestDTO;
 
 @Component
 public class InventoryToPickConverter {
 	public static PickCreationRequestDTO createPickCreationRequest(InventoryAllocatedEvent invnAllocatedEvent) {
+		InventoryDTO inventoryDTO = invnAllocatedEvent.getInventoryDTO();
 		PickCreationRequestDTO pickReq = new PickCreationRequestDTO();
-		pickReq.setBusName(invnAllocatedEvent.getBusName());
-		pickReq.setLocnNbr(invnAllocatedEvent.getLocnNbr());
-		pickReq.setBusUnit(invnAllocatedEvent.getBusUnit());
-		pickReq.setItemBrcd(invnAllocatedEvent.getItemBrcd());
-		pickReq.setLocnBrcd(invnAllocatedEvent.getLocnBrcd());
-		pickReq.setOrderNbr(invnAllocatedEvent.getOrderNbr());
-		pickReq.setOrderLineNbr(invnAllocatedEvent.getOrderLineNbr());
-		pickReq.setQty(invnAllocatedEvent.getQty());
+		pickReq.setBusName(inventoryDTO.getBusName());
+		pickReq.setLocnNbr(inventoryDTO.getLocnNbr());
+		pickReq.setBusUnit(inventoryDTO.getBusUnit());
+		pickReq.setItemBrcd(inventoryDTO.getItemBrcd());
+		pickReq.setLocnBrcd(inventoryDTO.getLocnBrcd());
+		pickReq.setOrderNbr(inventoryDTO.getOrderNbr());
+		pickReq.setOrderLineNbr(inventoryDTO.getOrderLineNbr());
+		pickReq.setQty(inventoryDTO.getQty());
 		pickReq.setPickedQty(0);
-		pickReq.setBatchNbr(invnAllocatedEvent.getBatchNbr());
-		pickReq.setOrderId(invnAllocatedEvent.getOrderId());
+		pickReq.setBatchNbr(inventoryDTO.getBatchNbr());
+		pickReq.setOrderId(inventoryDTO.getOrderId());
+		pickReq.setOrderLineId(inventoryDTO.getOrderLineId());
 		//pickReq.setCompany(invnAllocatedEvent);
 		//pickReq.setDivision(division);
-		pickReq.setUserId(invnAllocatedEvent.getUserId());
+		pickReq.setUserId(inventoryDTO.getUserId());
 		
 		return pickReq;
 	}
