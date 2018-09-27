@@ -70,7 +70,7 @@ public class Pick  implements Serializable{
 	Integer statCode;
 
 	@Column(name="ORDER_ID")
-	Integer orderId;
+	Long orderId;
 
 	@Column(name="ORDER_NBR")
 	String orderNbr;

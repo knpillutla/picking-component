@@ -28,7 +28,7 @@ public class PickDTO  extends BaseDTO{
 	String fromContainer;
 	String toContainer;
 	Integer statCode;
-	Integer orderId;
+	Long orderId;
 	String orderNbr;
 	String packageNbr;
 	Integer orderLineNbr;

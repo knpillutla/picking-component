@@ -26,7 +26,7 @@ public class PickCreationRequestDTO  extends BaseDTO{
 	Integer pickedQty;
 	String fromContainer;
 	String toContainer;
-	Integer orderId;
+	Long orderId;
 	String orderNbr;
 	String packageNbr;
 	Integer orderLineNbr;

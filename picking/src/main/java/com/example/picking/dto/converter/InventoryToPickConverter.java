@@ -18,6 +18,8 @@ public class InventoryToPickConverter {
 		pickReq.setOrderLineNbr(invnAllocatedEvent.getOrderLineNbr());
 		pickReq.setQty(invnAllocatedEvent.getQty());
 		pickReq.setPickedQty(0);
+		pickReq.setBatchNbr(invnAllocatedEvent.getBatchNbr());
+		pickReq.setOrderId(invnAllocatedEvent.getOrderId());
 		//pickReq.setCompany(invnAllocatedEvent);
 		//pickReq.setDivision(division);
 		pickReq.setUserId(invnAllocatedEvent.getUserId());
