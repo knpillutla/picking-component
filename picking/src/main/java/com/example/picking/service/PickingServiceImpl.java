@@ -31,7 +31,7 @@ public class PickingServiceImpl implements PickingService {
 	EventPublisher eventPublisher;
 	
 	public enum PickStatus {
-		CREATED(100), LOCKED(105), RELEASED(110), PICKED(120), SHORTED(140), CANCELLED(199);
+		CREATED(100), LOCKED(105), RELEASED(110), ASSIGNED(115), PICKED(120), SHORTED(140), CANCELLED(199);
 		PickStatus(Integer statCode) {
 			this.statCode = statCode;
 		}
@@ -43,30 +43,28 @@ public class PickingServiceImpl implements PickingService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.example.demo.PickingService#getNextPick()
-	 */
 	@Override
-	public PickDTO getNextPick() throws Exception {
-		// get next pick based on pick path sequence
-/*		Optional<PickDtl> pickTaskEntityOptional = pickHdrDAO.findById((long) 1);
-		if(pickTaskEntityOptional.isPresent()) {
-			PickDtl pickEntity = pickTaskEntityOptional.get();
-			PickDTO pickDTO = EntityToDTOConverter.getPickDTO(pickEntity);
-			return pickDTO;
-		}*/
-		return null;
+	@Transactional
+	public PickDTO assignNextPick(String busName, Integer locnNbr, String userId) throws Exception {
+		// find the next pick which is in status READY order by pickId(to start with), batchNbr, priority, createdDttm
+		Pick pickEntity = pickDAO.findNextPickId(busName, locnNbr, PickStatus.RELEASED.getStatCode());
+		pickEntity.setStatCode(PickStatus.ASSIGNED.getStatCode());
+		pickEntity.setUserId(userId);
+		Pick savedPickEntity = pickDAO.save(pickEntity);
+		return EntityDTOConverter.getPickDTO(pickEntity);
 	}
 
 	@Override
-	public PickDTO getNextPick(Long picklistId) throws Exception {
-		// get next pick based on pick path sequence for the given picklistId
-		return null;
+	@Transactional
+	public PickDTO assignNextPick(String busName, Integer locnNbr, String batchNbr, String userId) throws Exception {
+		// find the next pick which is in status READY order by pickId(to start with), batchNbr, priority, createdDttm
+		Pick pickEntity = pickDAO.findNextPickIdByBatchNbr(busName, locnNbr, batchNbr, PickStatus.RELEASED.getStatCode());
+		pickEntity.setStatCode(PickStatus.ASSIGNED.getStatCode());
+		pickEntity.setUserId(userId);
+		Pick savedPickEntity = pickDAO.save(pickEntity);
+		return EntityDTOConverter.getPickDTO(pickEntity);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.PickingService#confirmPick(com.example.AvroPickTask)
-	 */
 	@Override
 	@Transactional
 	public PickDTO confirmPick(PickConfirmRequestDTO pickConfirmRequest) throws Exception{
@@ -81,6 +79,7 @@ public class PickingServiceImpl implements PickingService {
 			Pick updatedPickObj = pickDAO.save(pickEntity);
 			pickDTO = EntityDTOConverter.getPickDTO(updatedPickObj);
 			PickConfirmationEvent pickConfirmEvent = new PickConfirmationEvent(pickDTO);
+			eventPublisher.publish(pickConfirmEvent);
 			logger.info("confirmPick End, updated pick obj:" + pickDTO);
 		}
 		return pickDTO;
@@ -93,7 +92,7 @@ public class PickingServiceImpl implements PickingService {
 	@Transactional
 	public PickDTO createPick(PickCreationRequestDTO pickCreationReq) throws Exception {
 		Pick newPickEntity = EntityDTOConverter.getPickEntity(pickCreationReq);
-		newPickEntity.setStatCode(PickStatus.CREATED.getStatCode());
+		newPickEntity.setStatCode(PickStatus.RELEASED.getStatCode());
 		PickDTO pickDTO = EntityDTOConverter.getPickDTO(pickDAO.save(newPickEntity));
 		PickCreatedEvent pickCreatedEvent = new PickCreatedEvent(pickDTO);
 		eventPublisher.publish(pickCreatedEvent);
@@ -158,4 +157,5 @@ public class PickingServiceImpl implements PickingService {
 		}
 		return pickDTOList;
 	}
+
 }

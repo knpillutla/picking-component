@@ -17,14 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.picking.dto.requests.PickConfirmRequestDTO;
-import com.example.picking.dto.requests.PicklistCreationRequestDTO;
 import com.example.picking.service.PickingService;
 
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/picking/v1")
 @Api(value="Pick Service", description="Operations pertaining to picking")
 @RefreshScope
+@Slf4j
 public class PickingRestEndPoint {
 
     @Value("${message: Picking Service - Config Server is not working..pelase check}")
@@ -39,17 +40,27 @@ public class PickingRestEndPoint {
 		return ResponseEntity.ok(msg);
 	}
 	
-	@GetMapping("/{busName}/{locnNbr}/picks/next")
-	public ResponseEntity getNextPick() throws IOException {
+	@PostMapping("/{busName}/{locnNbr}/picks/next/{userId}")
+	public ResponseEntity assignNextPick(@PathVariable("busName") String busName, @PathVariable("locnNbr") Integer locnNbr, @PathVariable("userId") String userId) throws IOException {
 		try {
-			return ResponseEntity.ok(pickingService.getNextPick());
+			return ResponseEntity.ok(pickingService.assignNextPick(busName, locnNbr, userId));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error occured while getting next pick task"));
 		}
 	}
 	
+	@PostMapping("/{busName}/{locnNbr}/picks/next/{batchNbr}/{userId}")
+	public ResponseEntity assignNextPickByBatchNbr(@PathVariable("busName") String busName, @PathVariable("locnNbr") Integer locnNbr, @PathVariable("batchNbr") String batchNbr, @PathVariable("userId") String userId) throws IOException {
+		try {
+			log.info("Received assign next pick by batch nbr:" + busName + "," + locnNbr + "," + batchNbr + "," + userId);
+			return ResponseEntity.ok(pickingService.assignNextPick(busName, locnNbr, batchNbr, userId));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ErrorRestResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error occured while getting next pick task"));
+		}
+	}
+
 	@GetMapping("/{busName}/{locnNbr}/picks/{id}")
 	public ResponseEntity getByPickId(@PathVariable("busName") String busName, @PathVariable("locnNbr") Integer locnNbr, @PathVariable("id") Long pickId) throws IOException {
 		try {

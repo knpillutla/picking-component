@@ -9,8 +9,6 @@ import com.example.picking.dto.responses.PickDTO;
 import com.example.picking.dto.responses.PicklistDTO;
 
 public interface PickingService {
-	public PickDTO getNextPick() throws Exception;
-
 	public PickDTO createPick(PickCreationRequestDTO pickCreationRequest) throws Exception;
 	
 	public PickDTO confirmPick(PickConfirmRequestDTO pickConfirmRequest) throws Exception;
@@ -19,11 +17,13 @@ public interface PickingService {
 
 	public List<PickDTO> findByOrderNbr(String busName, Integer locnNbr, String orderNbr) throws Exception;
 
-	PickDTO getNextPick(Long picklistId) throws Exception;
-
 	PickDTO findByPickId(String busName, Integer locnNbr, Long pickDtlId) throws Exception;
 
 	List<PickDTO> releasePicksforOrder(String busName, Integer locnNbr, String orderNbr) throws Exception;
 
 	List<PickDTO> releasePicksforBatch(String busName, Integer locnNbr, String batchNbr) throws Exception;
+
+	PickDTO assignNextPick(String busName, Integer locnNbr, String userId) throws Exception;
+
+	PickDTO assignNextPick(String busName, Integer locnNbr, String batchNbr, String userId) throws Exception;
 }

@@ -35,7 +35,7 @@ public class PickConfirmationFailureEvent extends ExceptionEvent{
 		this.addHeader("company", pickConfirmRequestDTO.getCompany());
 		this.addHeader("division", pickConfirmRequestDTO.getDivision());
 		this.addHeader("busUnit", pickConfirmRequestDTO.getBusUnit());
-		this.addHeader("picklistNbr", pickConfirmRequestDTO.getPickListId());
+		this.addHeader("batchNbr", pickConfirmRequestDTO.getBatchNbr());
 		//this.addHeader("orderId", pickConfirmRequestDTO.getOrderId());
 	}
 }

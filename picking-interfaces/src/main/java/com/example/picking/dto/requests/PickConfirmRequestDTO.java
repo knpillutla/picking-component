@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class PickConfirmRequestDTO extends BaseDTO{
 	public Long id;
 	public Long orderId;
-	public Long pickListId;
+	public String batchNbr;
 	public String busName;
 	public Integer locnNbr;
 	public String busUnit;
